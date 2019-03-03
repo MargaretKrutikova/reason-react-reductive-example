@@ -7,6 +7,7 @@ module ColorDataProvider = {
     );
 };
 
+let cotainerStyles = ReactDOMRe.Style.make(~height="180px", ());
 let colorBoxStyles = color =>
   ReactDOMRe.Style.make(
     ~width="100px",
@@ -22,11 +23,10 @@ module ColorDataComponent = {
     ReasonReact.statelessComponentWithRetainedProps("ColorData");
   let make = (~state: ColorDataReducer.colorDataState, ~dispatch, _children) => {
     let fetchColor = id => {
-      dispatch(Middleware.Thunk(ColorThunk.fetchData(id)));
+      dispatch(Middleware.Thunk(ColorThunk.fetchColorById(id)));
     };
     let fetchRandomColor = () => {
-      let randomId = Random.int(11) + 1;
-      fetchColor(randomId);
+      dispatch(Middleware.Thunk(ColorThunk.fetchRandomColor));
     };
     {
       ...component,
@@ -35,7 +35,7 @@ module ColorDataComponent = {
         fetchColor(1);
       },
       render: _self =>
-        <>
+        <div style=cotainerStyles>
           <button onClick={_event => fetchRandomColor()}>
             {ReasonReact.string("Refresh color")}
           </button>
@@ -53,7 +53,7 @@ module ColorDataComponent = {
                 | None => <h3> {ReasonReact.string("No color loaded")} </h3>
                 }}
              </div>}
-        </>,
+        </div>,
     };
   };
 };

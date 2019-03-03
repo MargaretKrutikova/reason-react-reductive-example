@@ -1,7 +1,7 @@
 open AppStore;
 open Api;
 
-let fetchData =
+let fetchColorById =
     (
       colorId: int,
       dispatch: Middleware.thunk(appState) => unit,
@@ -21,4 +21,15 @@ let fetchData =
        )
   )
   |> ignore;
+};
+
+let fetchRandomColor =
+    (
+      dispatch: Middleware.thunk(appState) => unit,
+      state: appState,
+      dataProvider: Api.dataProvider,
+    ) => {
+  // the api only has colors for ids from 1 to 12
+  let randomId = Random.int(11) + 1;
+  fetchColorById(randomId, dispatch, state, dataProvider);
 };
