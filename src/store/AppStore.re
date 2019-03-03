@@ -1,39 +1,58 @@
 open CounterReducer;
 open TextReducer;
-
-type appAction =
-  | TextAction(textAction)
-  | CounterAction(counterAction);
+open ColorDataReducer;
 
 type appState = {
   counter: counterState,
   text: textState,
+  colorData: colorDataState,
 };
 
-let appReducer = (state: appState, action: appAction) =>
+type Middleware.thunk(_) +=
+  | TextAction(textAction)
+  | CounterAction(counterAction)
+  | ColorDataAction(colorDataAction);
+
+let appReducer = (state: appState, action) =>
   switch (action) {
   | TextAction(action) => {...state, text: textReducer(state.text, action)}
   | CounterAction(action) => {
       ...state,
       counter: counterReducer(state.counter, action),
     }
+  | ColorDataAction(action) => {
+      ...state,
+      colorData: colorDataReducer(state.colorData, action),
+    }
+  | _ => state
   };
 
-let preloadedState: appState = {
-  counter: counterInitialState,
-  text: textInitialState,
+type appStore = Reductive.Store.t(Middleware.thunk(appState), appState);
+
+let createStore = (dataProvider: Api.dataProvider): appStore => {
+  let thunkMiddleware = Middleware.middleware(dataProvider);
+
+  let thunkEnhancer = (store, next) => thunkMiddleware(store) @@ next;
+
+  let preloadedState: appState = {
+    counter: counterInitialState,
+    text: textInitialState,
+    colorData: colorDataInitialState,
+  };
+
+  let storeEnhancer =
+    ReductiveDevTools.(
+      Connectors.reductiveEnhancer(
+        Extension.enhancerOptions(~name="ReductiveApp", ()),
+      )
+    );
+
+  let store: appStore =
+    (storeEnhancer @@ Reductive.Store.create)(
+      ~reducer=appReducer,
+      ~preloadedState,
+      ~enhancer=thunkEnhancer,
+      (),
+    );
+  store;
 };
-
-let storeEnhancer =
-  ReductiveDevTools.(
-    Connectors.reductiveEnhancer(
-      Extension.enhancerOptions(~name="ReductiveApp", ()),
-    )
-  );
-
-let store =
-  (storeEnhancer @@ Reductive.Store.create)(
-    ~reducer=appReducer,
-    ~preloadedState,
-    (),
-  );
