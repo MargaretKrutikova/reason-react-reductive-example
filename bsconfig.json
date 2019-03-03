@@ -20,6 +20,12 @@
   ],
   "suffix": ".bs.js",
   "namespace": true,
-  "bs-dependencies": ["reason-react", "reductive", "reductive-dev-tools"],
+  "bs-dependencies": [
+    "reason-react",
+    "reductive",
+    "bs-axios",
+    "@glennsl/bs-json",
+    "reductive-dev-tools"
+  ],
   "refmt": 3
 }
