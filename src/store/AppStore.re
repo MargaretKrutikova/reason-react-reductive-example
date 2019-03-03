@@ -24,4 +24,16 @@ let preloadedState: appState = {
   text: textInitialState,
 };
 
-let store = Reductive.Store.create(~reducer=appReducer, ~preloadedState, ());
+let storeEnhancer =
+  ReductiveDevTools.(
+    Connectors.reductiveEnhancer(
+      Extension.enhancerOptions(~name="ReductiveApp", ()),
+    )
+  );
+
+let store =
+  (storeEnhancer @@ Reductive.Store.create)(
+    ~reducer=appReducer,
+    ~preloadedState,
+    (),
+  );

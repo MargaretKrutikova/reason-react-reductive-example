@@ -11,6 +11,7 @@
     "dir": "src",
     "subdirs": true
   },
+  "bsc-flags": ["-bs-g"],
   "package-specs": [
     {
       "module": "commonjs",
@@ -19,6 +20,6 @@
   ],
   "suffix": ".bs.js",
   "namespace": true,
-  "bs-dependencies": ["reason-react", "reductive"],
+  "bs-dependencies": ["reason-react", "reductive", "reductive-dev-tools"],
   "refmt": 3
 }
