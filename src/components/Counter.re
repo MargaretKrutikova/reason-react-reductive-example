@@ -2,11 +2,7 @@ open AppStore;
 
 module CounterProvider = {
   let make =
-    Reductive.Lense.createMake(
-      ~name="CounterProvider",
-      ~lense=(s: appState) => s.counter,
-      store,
-    );
+    StoreProvider.createMake(~name="CounterProvider", ~lense=s => s.counter);
 };
 
 module CounterComponent = {

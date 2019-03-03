@@ -2,11 +2,7 @@ open AppStore;
 
 module TextProvider = {
   let make =
-    Reductive.Lense.createMake(
-      ~name="TextProvider",
-      ~lense=(s: appState) => s.text,
-      store,
-    );
+    StoreProvider.createMake(~name="TextProvider", ~lense=s => s.text);
 };
 
 module TextComponent = {
@@ -17,10 +13,10 @@ module TextComponent = {
     render: _self =>
       <div>
         <h2> {ReasonReact.string("Text: " ++ state)} </h2>
-        <button onClick={_ => dispatch(AppStore.TextAction(AppendA))}>
+        <button onClick={_ => dispatch(TextAction(AppendA))}>
           {ReasonReact.string("+A")}
         </button>
-        <button onClick={_ => dispatch(AppStore.TextAction(AppendB))}>
+        <button onClick={_ => dispatch(TextAction(AppendB))}>
           {ReasonReact.string("+B")}
         </button>
       </div>,
