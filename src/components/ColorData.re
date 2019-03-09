@@ -23,10 +23,10 @@ module ColorDataComponent = {
     ReasonReact.statelessComponentWithRetainedProps("ColorData");
   let make = (~state: ColorDataReducer.colorDataState, ~dispatch, _children) => {
     let fetchColor = id => {
-      dispatch(Middleware.Thunk(ColorThunk.fetchColorById(id)));
+      dispatch(`Thunk(ColorThunk.fetchColorById(id)) |> Obj.magic);
     };
     let fetchRandomColor = () => {
-      dispatch(Middleware.Thunk(ColorThunk.fetchRandomColor));
+      dispatch(`Thunk(ColorThunk.fetchRandomColor) |> Obj.magic);
     };
     {
       ...component,

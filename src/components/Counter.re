@@ -1,7 +1,7 @@
 open AppStore;
 
 module CounterProvider = {
-  let make =
+  let make = 
     StoreProvider.createMake(~name="CounterProvider", ~lense=s => s.counter);
 };
 
@@ -14,10 +14,10 @@ module CounterComponent = {
       <div>
         <h1> {ReasonReact.string(text)} </h1>
         <h2> {ReasonReact.string("Counter: " ++ string_of_int(state))} </h2>
-        <button onClick={_ => dispatch(CounterAction(Increment))}>
+        <button onClick={_ => dispatch(`CounterAction(CounterReducer.Increment))}>
           {ReasonReact.string("++")}
         </button>
-        <button onClick={_ => dispatch(CounterAction(Decrement))}>
+        <button onClick={_ => dispatch(`CounterAction(CounterReducer.Decrement))}>
           {ReasonReact.string("--")}
         </button>
       </div>,

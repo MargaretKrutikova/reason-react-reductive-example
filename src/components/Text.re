@@ -1,8 +1,7 @@
 open AppStore;
 
 module TextProvider = {
-  let make =
-    StoreProvider.createMake(~name="TextProvider", ~lense=s => s.text);
+  let make = StoreProvider.createMake(~name="TextProvider", ~lense=s => s.text);
 };
 
 module TextComponent = {
@@ -13,10 +12,10 @@ module TextComponent = {
     render: _self =>
       <div>
         <h2> {ReasonReact.string("Text: " ++ state)} </h2>
-        <button onClick={_ => dispatch(TextAction(AppendA))}>
+        <button onClick={_ => dispatch(`TextAction(TextReducer.AppendA))}>
           {ReasonReact.string("+A")}
         </button>
-        <button onClick={_ => dispatch(TextAction(AppendB))}>
+        <button onClick={_ => dispatch(`TextAction(TextReducer.AppendB))}>
           {ReasonReact.string("+B")}
         </button>
       </div>,

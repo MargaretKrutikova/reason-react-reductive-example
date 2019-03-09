@@ -8,19 +8,21 @@ type appState = {
   colorData: colorDataState,
 };
 
-type Middleware.thunk(_) +=
-  | TextAction(textAction)
-  | CounterAction(counterAction)
-  | ColorDataAction(colorDataAction);
+type action('state) = [ 
+  Middleware.thunk('state)
+  | `TextAction(textAction)
+  | `CounterAction(counterAction)
+  | `ColorDataAction(colorDataAction)
+];
 
-let appReducer = (state: appState, action) =>
+let appReducer = (state: appState, action: action('state)) =>
   switch (action) {
-  | TextAction(action) => {...state, text: textReducer(state.text, action)}
-  | CounterAction(action) => {
+  | `TextAction(action) => {...state, text: textReducer(state.text, action)}
+  | `CounterAction(action) => {
       ...state,
       counter: counterReducer(state.counter, action),
     }
-  | ColorDataAction(action) => {
+  | `ColorDataAction(action) => {
       ...state,
       colorData: colorDataReducer(state.colorData, action),
     }
@@ -49,9 +51,9 @@ let createStore = (dataProvider: Api.dataProvider): appStore => {
 
   let store: appStore =
     (storeEnhancer @@ Reductive.Store.create)(
-      ~reducer=appReducer,
+      ~reducer=Obj.magic(appReducer),
       ~preloadedState,
-      ~enhancer=thunkEnhancer,
+      ~enhancer=Obj.magic(thunkEnhancer),
       (),
     );
   store;
