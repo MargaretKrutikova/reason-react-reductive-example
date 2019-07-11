@@ -27,10 +27,13 @@ let appReducer = (state: appState, action) =>
   | _ => state
   };
 
-type appStore = Reductive.Store.t(Middleware.thunk(appState), appState);
+type t = Reductive.Store.t(Middleware.thunk(appState), appState);
 
-let createStore = (dataProvider: Api.dataProvider): appStore => {
-  let thunkMiddleware = Middleware.middleware(dataProvider);
+let createStore = (): t => {
+  let baseUrl = "https://reqres.in/api/";
+
+  let thunkMiddleware =
+    Middleware.middleware(Api.createDataProvider(~baseUrl));
 
   let thunkEnhancer = (store, next) => thunkMiddleware(store) @@ next;
 
@@ -47,7 +50,7 @@ let createStore = (dataProvider: Api.dataProvider): appStore => {
       )
     );
 
-  let store: appStore =
+  let store: t =
     (storeEnhancer @@ Reductive.Store.create)(
       ~reducer=appReducer,
       ~preloadedState,
