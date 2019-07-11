@@ -13,10 +13,10 @@ module TextComponent = {
     render: _self =>
       <div>
         <h2> {ReasonReact.string("Text: " ++ state)} </h2>
-        <button onClick={_ => dispatch(TextAction(AppendA))}>
+        <button onClick={_ => dispatch(TextAction(AppendA()))}>
           {ReasonReact.string("+A")}
         </button>
-        <button onClick={_ => dispatch(TextAction(AppendB))}>
+        <button onClick={_ => dispatch(TextAction(AppendB()))}>
           {ReasonReact.string("+B")}
         </button>
       </div>,
