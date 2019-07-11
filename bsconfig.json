@@ -20,8 +20,8 @@
     "reason-react",
     "reductive",
     "bs-axios",
-    "@glennsl/bs-json",
-    "reductive-dev-tools"
+    "@glennsl/bs-json"
   ],
+  "bs-dev-dependencies": ["reductive-dev-tools"],
   "refmt": 3
 }
