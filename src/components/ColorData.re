@@ -1,12 +1,5 @@
 open AppStore;
 
-module ColorDataProvider = {
-  let make =
-    StoreProvider.createMake(~name="ColorDataProvider", ~lense=s =>
-      s.colorData
-    );
-};
-
 let cotainerStyles = ReactDOMRe.Style.make(~height="180px", ());
 let colorBoxStyles = color =>
   ReactDOMRe.Style.make(
@@ -18,45 +11,32 @@ let colorBoxStyles = color =>
     (),
   );
 
-module ColorDataComponent = {
-  let component =
-    ReasonReact.statelessComponentWithRetainedProps("ColorData");
-  let make = (~state: ColorDataReducer.colorDataState, ~dispatch, _children) => {
-    let fetchColor = id => {
-      dispatch(Middleware.Thunk(ColorThunk.fetchColorById(id)));
-    };
-    let fetchRandomColor = () => {
-      dispatch(Middleware.Thunk(ColorThunk.fetchRandomColor));
-    };
-    {
-      ...component,
-      ReasonReact.retainedProps: state,
-      didMount: _self => {
-        fetchColor(1);
-      },
-      render: _self =>
-        <div style=cotainerStyles>
-          <button onClick={_event => fetchRandomColor()}>
-            {ReasonReact.string("Refresh color")}
-          </button>
-          {state.loading ?
-             <h3> {ReasonReact.string("Loading ...")} </h3> :
-             <div>
-               {switch (state.color) {
-                | Some(colorInfo) =>
-                  <>
-                    <div style={colorBoxStyles(colorInfo.color)} />
-                    <h3>
-                      {ReasonReact.string("Color name: " ++ colorInfo.name)}
-                    </h3>
-                  </>
-                | None => <h3> {ReasonReact.string("No color loaded")} </h3>
-                }}
-             </div>}
-        </div>,
-    };
-  };
+let fetchRandomColor = dispatch => {
+  dispatch(Middleware.Thunk(ColorThunk.fetchRandomColor));
 };
 
-let make = children =>
-  ColorDataProvider.make(~component=ColorDataComponent.make, children);
+[@react.component]
+let make = () => {
+  let state = Store.useSelector(state => state.colorData);
+  let dispatch = Store.useDispatch();
+
+  <div style=cotainerStyles>
+    <button onClick={_event => fetchRandomColor(dispatch)}>
+      {ReasonReact.string("Refresh color")}
+    </button>
+    {state.loading
+       ? <h3> {ReasonReact.string("Loading ...")} </h3>
+       : <div>
+           {switch (state.color) {
+            | Some(colorInfo) =>
+              <>
+                <div style={colorBoxStyles(colorInfo.color)} />
+                <h3>
+                  {ReasonReact.string("Color name: " ++ colorInfo.name)}
+                </h3>
+              </>
+            | None => <h3> {ReasonReact.string("No color loaded")} </h3>
+            }}
+         </div>}
+  </div>;
+};

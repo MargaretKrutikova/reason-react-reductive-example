@@ -1,1 +1,4 @@
-ReactDOMRe.renderToElementWithId(<App />, "renderApp");
+ReactDOMRe.renderToElementWithId(
+  <Store.Provider> <App /> </Store.Provider>,
+  "renderApp",
+);
